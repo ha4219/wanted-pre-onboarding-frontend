@@ -1,15 +1,42 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import '@/index.css';
-import App from '@/App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import App from '@/pages/App';
+import SignupPage from '@/pages/Signup';
+import SigninPage from '@/pages/Signin';
+import '@/index.css';
+import Header from '@/components/Header';
+
+const router = createBrowserRouter([
+  {
+    element: <Header />,
+    children: [
+      {
+        path: '/',
+        element: <App />,
+      },
+      {
+        path: '/signin',
+        element: <SigninPage />,
+      },
+      {
+        path: '/signup',
+        element: <SignupPage />,
+      },
+    ],
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <div className="container mx-auto">
+      <RouterProvider router={router} />
+    </div>
   </React.StrictMode>,
 );
 
