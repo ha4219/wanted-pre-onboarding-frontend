@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { validateEmail, validatePassword } from '@/utils/validate';
+import { useNavigate } from 'react-router-dom';
 
 function SignupPage() {
+  const navigate = useNavigate();
   const [isValid, setIsValid] = useState<{ email: boolean; password: boolean }>(
     {
       email: false,
@@ -9,17 +11,37 @@ function SignupPage() {
     },
   );
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
       email: { value: string };
       password: { value: string };
     };
+
     if (
       validateEmail(target.email.value) &&
       validatePassword(target.password.value)
     ) {
-      console.log();
+      console.log(
+        JSON.stringify({
+          email: target.email.value,
+          password: target.password.value,
+        }),
+      );
+
+      const raw = await fetch('/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: target.email.value,
+          password: target.password.value,
+        }),
+      });
+      if (raw.ok) {
+        navigate('/signin');
+      }
     }
   };
 
@@ -43,6 +65,7 @@ function SignupPage() {
         <div className="mb-6">
           <label className="block mb-2 text-sm font-medium">email</label>
           <input
+            data-testid="email"
             name="email"
             type="email"
             onChange={handleEmail}
@@ -52,6 +75,7 @@ function SignupPage() {
         <div className="mb-6">
           <label className="block mb-2 text-sm font-medium">password</label>
           <input
+            data-testid="password"
             name="password"
             type="password"
             onChange={handlePassword}

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { validateEmail, validatePassword } from '@/utils/validate';
+import { useNavigate } from 'react-router-dom';
 
 function SigninPage() {
+  const navigate = useNavigate();
   const [isValid, setIsValid] = useState<{ email: boolean; password: boolean }>(
     {
       email: false,
@@ -19,7 +21,7 @@ function SigninPage() {
       validateEmail(target.email.value) &&
       validatePassword(target.password.value)
     ) {
-      console.log();
+      navigate('/signin');
     }
   };
 
